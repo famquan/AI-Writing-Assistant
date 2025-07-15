@@ -1,10 +1,20 @@
+using System;
+using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AI_Writing_Assistant
 {
+    public enum CompletionMode
+    {
+        Select,
+        Auto
+    }
+
     public class AppSettings
     {
         public string ApiKey { get; set; }
+        public CompletionMode CompletionMode { get; set; } = CompletionMode.Select;
     }
 
     public class SettingsService
@@ -27,12 +37,27 @@ namespace AI_Writing_Assistant
             return settings?.ApiKey;
         }
 
-        public void SaveApiKey(string apiKey)
+        public CompletionMode GetCompletionMode()
+        {
+            return settings?.CompletionMode ?? CompletionMode.Select;
+        }
+
+        public void SaveAllSettings(string apiKey, CompletionMode mode)
         {
             settings.ApiKey = apiKey;
+            settings.CompletionMode = mode;
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Converters = { new JsonStringEnumConverter() }
+                };
                 string json = JsonSerializer.Serialize(settings, options);
                 File.WriteAllText(settingsFilePath, json);
             }
@@ -49,7 +74,11 @@ namespace AI_Writing_Assistant
                 if (File.Exists(settingsFilePath))
                 {
                     string json = File.ReadAllText(settingsFilePath);
-                    settings = JsonSerializer.Deserialize<AppSettings>(json);
+                    var options = new JsonSerializerOptions
+                    {
+                        Converters = { new JsonStringEnumConverter() }
+                    };
+                    settings = JsonSerializer.Deserialize<AppSettings>(json, options);
                 }
                 else
                 {

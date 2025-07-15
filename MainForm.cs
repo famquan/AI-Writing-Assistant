@@ -102,8 +102,17 @@ namespace AI_Writing_Assistant
 
                 if (suggestions != null && suggestions.Any())
                 {
-                    // Show suggestion window
-                    ShowSuggestionWindow(selectedText, suggestions);
+                    var completionMode = _settingsService.GetCompletionMode();
+                    if (completionMode == CompletionMode.Auto)
+                    {
+                        // Auto-replace with the first suggestion
+                        OnSuggestionSelected(this, new SuggestionSelectedEventArgs(suggestions.First().ImprovedText));
+                    }
+                    else
+                    {
+                        // Show suggestion window for manual selection
+                        ShowSuggestionWindow(selectedText, suggestions);
+                    }
                 }
                 else
                 {
@@ -120,14 +129,11 @@ namespace AI_Writing_Assistant
             }
         }
 
+        // Copy selected text to clipboard
         private string GetSelectedText()
         {
             try
             {
-                // Copy selected text to clipboard
-                SendKeys.SendWait("^c");
-                System.Threading.Thread.Sleep(100);
-
                 if (Clipboard.ContainsText())
                 {
                     return Clipboard.GetText();

@@ -8,6 +8,7 @@ namespace AI_Writing_Assistant
     {
         private TextBox apiKeyTextBox;
         private Button saveButton;
+        private ComboBox completionModeComboBox;
         private readonly SettingsService _settingsService;
 
         public SettingsForm(SettingsService settingsService)
@@ -52,19 +53,42 @@ namespace AI_Writing_Assistant
 
             saveButton.Click += SaveSettings;
 
+            var completionModeLabel = new Label
+            {
+                Text = "Completion Mode:",
+                Location = new Point(20, 90),
+                AutoSize = true
+            };
+
+            completionModeComboBox = new ComboBox
+            {
+                Location = new Point(20, 110),
+                Size = new Size(350, 20),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            completionModeComboBox.Items.AddRange(Enum.GetNames(typeof(CompletionMode)));
+
             this.Controls.Add(apiKeyLabel);
             this.Controls.Add(apiKeyTextBox);
+            this.Controls.Add(completionModeLabel);
+            this.Controls.Add(completionModeComboBox);
             this.Controls.Add(saveButton);
         }
 
         private void LoadSettings()
         {
             apiKeyTextBox.Text = _settingsService.GetApiKey();
+            completionModeComboBox.SelectedItem = _settingsService.GetCompletionMode().ToString();
         }
 
         private void SaveSettings(object sender, EventArgs e)
         {
-            _settingsService.SaveApiKey(apiKeyTextBox.Text);
+            if (completionModeComboBox.SelectedItem != null)
+            {
+                var apiKey = apiKeyTextBox.Text;
+                var mode = (CompletionMode)Enum.Parse(typeof(CompletionMode), completionModeComboBox.SelectedItem.ToString());
+                _settingsService.SaveAllSettings(apiKey, mode);
+            }
             MessageBox.Show("Settings saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
