@@ -24,13 +24,21 @@ namespace AI_Writing_Assistant
             LoadSuggestions();
         }
 
+        public SuggestionWindow(string translatedText)
+        {
+            this.originalText = translatedText;
+            this.suggestions = new List<WritingSuggestion> { new WritingSuggestion { Type = "Translation", ImprovedText = translatedText, Reason = "Translated text." } };
+            InitializeComponents();
+            LoadSuggestions();
+            suggestionsListBox.KeyDown += SuggestionsListBox_KeyDown;
+        }
+
         private void InitializeComponents()
         {
             // Window setup
-            this.Text = "Let's choose one.";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "AI Assistant";
             this.TopMost = true;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -46,7 +54,7 @@ namespace AI_Writing_Assistant
                 DrawMode = DrawMode.OwnerDrawVariable,
                 Dock = DockStyle.Fill,
                 BorderStyle = BorderStyle.None,
-                BackColor = Color.FromArgb(248, 249, 250),
+                BackColor = Color.White ,
             };
 
             suggestionsListBox.MeasureItem += SuggestionsListBox_MeasureItem;
@@ -151,7 +159,7 @@ namespace AI_Writing_Assistant
                 case "clarity": return Color.FromArgb(0, 123, 255);
                 case "style": return Color.FromArgb(40, 167, 69);
                 case "conciseness": return Color.FromArgb(255, 193, 7);
-                default: return Color.FromArgb(108, 117, 125);
+                default: return Color.DarkBlue;
             }
         }
 

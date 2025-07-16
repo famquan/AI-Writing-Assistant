@@ -142,7 +142,7 @@ namespace AI_Writing_Assistant
 
                 if (!string.IsNullOrWhiteSpace(translatedText))
                 {
-                    OnSuggestionSelected(this, new SuggestionSelectedEventArgs(translatedText));
+                    ShowSuggestionWindow(translatedText);
                 }
             }
             catch (Exception ex)
@@ -182,6 +182,18 @@ namespace AI_Writing_Assistant
 
             suggestionWindow = new SuggestionWindow(originalText, suggestions);
             suggestionWindow.SuggestionSelected += OnSuggestionSelected;
+            suggestionWindow.Show();
+            suggestionWindow.BringToFront();
+        }
+
+        private void ShowSuggestionWindow(string translatedText)
+        {
+            if (suggestionWindow != null)
+            {
+                suggestionWindow.Close();
+            }
+
+            suggestionWindow = new SuggestionWindow(translatedText);
             suggestionWindow.Show();
             suggestionWindow.BringToFront();
         }
