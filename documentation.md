@@ -9,7 +9,7 @@ The AI Writing Assistant is a .NET 8 WinForms application that helps users impro
 - **System Tray Integration**: The application runs as a system tray icon, providing access to settings, an about dialog, and an exit option.
 - **Global Hotkeys**:
   - `CTRL+SHIFT+Z`: Triggers the writing assistant on the currently selected text.
-  - `SHIFT+V`: Translates the selected text to Vietnamese and copies it to the clipboard.
+  - `CTRL+SHIFT+V`: Translates the selected text to Vietnamese and copies it to the clipboard.
 - **AI-Powered Suggestions**: Uses OpenAI's `gpt-4.1-mini` model to provide writing suggestions.
 - **Two Completion Modes**:
     - **Select Mode**: Displays a window with a list of suggestions for the user to choose from.
@@ -31,7 +31,7 @@ The solution is organized into several key components:
 ## 4. Workflow
 
 1. The application starts and creates a `MainForm` instance, which is hidden from view. A system tray icon is displayed.
-2. The `MainForm` sets up a `GlobalKeyboardHook` to listen for the `CTRL+SHIFT+Z` and `SHIFT+V` hotkeys.
+2. The `MainForm` sets up a `GlobalKeyboardHook` to listen for the `CTRL+SHIFT+Z` and `CTRL+SHIFT+V` hotkeys.
 3. When a hotkey is pressed, the `OnGlobalKeyDown` event is triggered.
 4. The `TriggerWritingAssistant` method is called, which gets the selected text from the clipboard.
 5. The selected text is passed to the `AIService`, which sends a request to the OpenAI API.
