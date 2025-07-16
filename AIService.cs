@@ -30,21 +30,19 @@ namespace AI_Writing_Assistant
 
                 var requestBody = new
                 {
-                    model = "gpt-3.5-turbo-0125",
+                    model = "gpt-4.1-mini",
                     response_format = new { type = "json_object" },
                     messages = new[]
                     {
                         new {
                             role = "system",
-                            content = @"You are a helpful writing assistant that improves text quality. 
-You must respond in JSON format. 
-The JSON object should have a single key 'suggestions' which is an array of objects. 
-Each object in the array should have the following properties: 'type' (string), 'improved_text' (string), and 'reason' (string).
-Provide up to 3 suggestions."
+                            content = @"You are an English language assistant who helps improve grammar, style, and clarity. 
+You must respond in JSON format with a single key 'suggestions' which is an array of objects. Each object should have the properties: 'type' (string), 'improved_text' (string), and 'reason' (string). 
+Provide up to 3 suggestions. When improving content, revise the entire input as a single block of text rather than splitting it into multiple lines."
                         },
                         new {
                             role = "user",
-                            content = $"Please analyze the following text:\n\n{text}"
+                            content = $"Please help me improve the following content:\n \"{text}\""
                         }
                     },
                     max_tokens = 1000,
@@ -74,16 +72,12 @@ Provide up to 3 suggestions."
         {
             var suggestions = new List<WritingSuggestion>();
 
-            // Default improvement
-            if (suggestions.Count == 0)
+            suggestions.Add(new WritingSuggestion
             {
-                suggestions.Add(new WritingSuggestion
-                {
-                    Type = "Style",
-                    ImprovedText = text.Trim(),
-                    Reason = "Cleaned up whitespace and formatting"
-                });
-            }
+                Type = "Style",
+                ImprovedText = text.Trim(),
+                Reason = "Cleaned up whitespace and formatting"
+            });
 
             return suggestions;
         }
