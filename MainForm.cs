@@ -76,28 +76,28 @@ namespace AI_Writing_Assistant
                 e.Handled = true;
                 await TriggerWritingAssistant();
             }
+            // Check for CTRL+SHIFT+V
+            else if (e.KeyData == (Keys.V | Keys.Control | Keys.Shift))
+            {
+                e.Handled = true;
+                await TriggerTranslation();
+            }
         }
 
         private async Task TriggerWritingAssistant()
         {
             if (isProcessing) return;
             isProcessing = true;
+            SetWaitCursor();
 
             try
             {
-                // Get selected text from clipboard
                 string selectedText = GetSelectedText();
-
                 if (string.IsNullOrWhiteSpace(selectedText))
                 {
-                    ShowNotification("No text selected", "Please select some text first.");
                     return;
                 }
 
-                // Show loading indicator
-                ShowNotification("Processing...", "AI is analyzing your text...");
-
-                // Get AI suggestions
                 var suggestions = await _aiService.GetWritingSuggestions(selectedText);
 
                 if (suggestions != null && suggestions.Any())
@@ -105,18 +105,12 @@ namespace AI_Writing_Assistant
                     var completionMode = _settingsService.GetCompletionMode();
                     if (completionMode == CompletionMode.Auto)
                     {
-                        // Auto-replace with the first suggestion
                         OnSuggestionSelected(this, new SuggestionSelectedEventArgs(suggestions.First().ImprovedText));
                     }
                     else
                     {
-                        // Show suggestion window for manual selection
                         ShowSuggestionWindow(selectedText, suggestions);
                     }
-                }
-                else
-                {
-                    ShowNotification("No suggestions", "Your text looks good already!");
                 }
             }
             catch (Exception ex)
@@ -126,6 +120,39 @@ namespace AI_Writing_Assistant
             finally
             {
                 isProcessing = false;
+                SetDefaultCursor();
+            }
+        }
+
+        private async Task TriggerTranslation()
+        {
+            if (isProcessing) return;
+            isProcessing = true;
+            SetWaitCursor();
+
+            try
+            {
+                string selectedText = GetSelectedText();
+                if (string.IsNullOrWhiteSpace(selectedText))
+                {
+                    return;
+                }
+
+                string translatedText = await _aiService.TranslateToVietnameseAsync(selectedText);
+
+                if (!string.IsNullOrWhiteSpace(translatedText))
+                {
+                    OnSuggestionSelected(this, new SuggestionSelectedEventArgs(translatedText));
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowNotification("Error", $"Translation failed: {ex.Message}");
+            }
+            finally
+            {
+                isProcessing = false;
+                SetDefaultCursor();
             }
         }
 
@@ -168,8 +195,6 @@ namespace AI_Writing_Assistant
 
                 // Paste the suggestion
                 SendKeys.SendWait("^v");
-
-                ShowNotification("Applied", "Suggestion applied successfully!");
             }
             catch (Exception ex)
             {
@@ -177,6 +202,15 @@ namespace AI_Writing_Assistant
             }
         }
 
+        private void SetWaitCursor()
+        {
+            Cursor.Current = Cursors.AppStarting;
+        }
+
+        private void SetDefaultCursor()
+        {
+            Cursor.Current = Cursors.Default;
+        }
         private void ShowNotification(string title, string message)
         {
             trayIcon.ShowBalloonTip(3000, title, message, ToolTipIcon.Info);
@@ -190,7 +224,7 @@ namespace AI_Writing_Assistant
 
         private void ShowAbout(object? sender, EventArgs e)
         {
-            MessageBox.Show("AI Writing Assistant v1.0\n\nPress CTRL+SHIFT+Z to improve selected text.\n\nPowered by AI language models.",
+            MessageBox.Show("AI Writing Assistant v1.1\n\nPress CTRL+SHIFT+Z to improve selected text.\n\nPress CTRL+SHIFT+V to translate selected text.\n\nPowered by AI language models.",
                           "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

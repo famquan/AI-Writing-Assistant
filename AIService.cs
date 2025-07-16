@@ -68,6 +68,55 @@ Provide up to 3 suggestions. When improving content, revise the entire input as 
             }
         }
 
+        public async Task<string> TranslateToVietnameseAsync(string text)
+        {
+            var apiKey = _settingsService.GetApiKey();
+            if (string.IsNullOrEmpty(apiKey) || apiKey.Contains("your-api-key"))
+            {
+                return "API key not configured.";
+            }
+
+            try
+            {
+                var requestBody = new
+                {
+                    model = "gpt-4.1-mini",
+                    response_format = new { type = "json_object" },
+                    messages = new[]
+                    {
+                        new {
+                            role = "system",
+                            content = @"You are a translation assistant. Translate the given text to Vietnamese.
+You must respond in JSON format with a single key 'translation' which is a string."
+                        },
+                        new {
+                            role = "user",
+                            content = $"Translate the following text to Vietnamese:\n \"{text}\""
+                        }
+                    },
+                    max_tokens = 1000,
+                    temperature = 0.7
+                };
+
+                var json = JsonSerializer.Serialize(requestBody);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var httpClient = _httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+                var response = await httpClient.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                return ParseTranslationResponse(responseContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calling AI service for translation: {ex.Message}");
+                return "Error during translation.";
+            }
+        }
+
         private List<WritingSuggestion> GetDefaultText(string text)
         {
             var suggestions = new List<WritingSuggestion>();
@@ -110,6 +159,35 @@ Provide up to 3 suggestions. When improving content, revise the entire input as 
 
             return new List<WritingSuggestion>();
         }
+
+        private string ParseTranslationResponse(string response)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var aiResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(response, options);
+
+                if (aiResponse?.Choices?.Count > 0)
+                {
+                    var messageContent = aiResponse.Choices[0].Message?.Content;
+                    if (!string.IsNullOrEmpty(messageContent))
+                    {
+                        var translationResponse = JsonSerializer.Deserialize<TranslationResponse>(messageContent, options);
+                        return translationResponse?.Translation ?? "No translation found.";
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error parsing translation response: {ex.Message}");
+            }
+
+            return "Error parsing translation.";
+        }
     }
 
     // Helper classes for deserializing OpenAI API response
@@ -138,5 +216,11 @@ Provide up to 3 suggestions. When improving content, revise the entire input as 
     {
         [JsonPropertyName("suggestions")]
         public List<WritingSuggestion>? Suggestions { get; set; }
+    }
+
+    public class TranslationResponse
+    {
+        [JsonPropertyName("translation")]
+        public string? Translation { get; set; }
     }
 }
