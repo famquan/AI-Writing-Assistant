@@ -9,6 +9,8 @@ namespace AI_Writing_Assistant
         private TextBox apiKeyTextBox;
         private Button saveButton;
         private ComboBox completionModeComboBox;
+        private TextBox writingPromptTextBox;
+        private TextBox translationPromptTextBox;
         private readonly SettingsService _settingsService;
 
         public SettingsForm(SettingsService settingsService)
@@ -21,7 +23,7 @@ namespace AI_Writing_Assistant
         private void InitializeComponents()
         {
             this.Text = "Settings";
-            this.Size = new Size(400, 300);
+            this.Size = new Size(400, 550);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -41,10 +43,40 @@ namespace AI_Writing_Assistant
                 PasswordChar = '*'
             };
 
+            var writingPromptLabel = new Label
+            {
+                Text = "Writing System Prompt:",
+                Location = new Point(20, 150),
+                AutoSize = true
+            };
+
+            writingPromptTextBox = new TextBox
+            {
+                Location = new Point(20, 170),
+                Size = new Size(350, 100),
+                Multiline = true,
+                ScrollBars = ScrollBars.Vertical
+            };
+
+            var translationPromptLabel = new Label
+            {
+                Text = "Translation System Prompt:",
+                Location = new Point(20, 290),
+                AutoSize = true
+            };
+
+            translationPromptTextBox = new TextBox
+            {
+                Location = new Point(20, 310),
+                Size = new Size(350, 100),
+                Multiline = true,
+                ScrollBars = ScrollBars.Vertical
+            };
+
             saveButton = new Button
             {
                 Text = "Save",
-                Location = new Point(295, 200),
+                Location = new Point(295, 470),
                 Size = new Size(75, 23),
                 BackColor = Color.FromArgb(0, 123, 255),
                 ForeColor = Color.White,
@@ -72,6 +104,10 @@ namespace AI_Writing_Assistant
             this.Controls.Add(apiKeyTextBox);
             this.Controls.Add(completionModeLabel);
             this.Controls.Add(completionModeComboBox);
+            this.Controls.Add(writingPromptLabel);
+            this.Controls.Add(writingPromptTextBox);
+            this.Controls.Add(translationPromptLabel);
+            this.Controls.Add(translationPromptTextBox);
             this.Controls.Add(saveButton);
         }
 
@@ -79,6 +115,8 @@ namespace AI_Writing_Assistant
         {
             apiKeyTextBox.Text = _settingsService.GetApiKey();
             completionModeComboBox.SelectedItem = _settingsService.GetCompletionMode().ToString();
+            writingPromptTextBox.Text = _settingsService.GetWritingSystemPrompt();
+            translationPromptTextBox.Text = _settingsService.GetTranslationSystemPrompt();
         }
 
         private void SaveSettings(object sender, EventArgs e)
@@ -87,7 +125,9 @@ namespace AI_Writing_Assistant
             {
                 var apiKey = apiKeyTextBox.Text;
                 var mode = (CompletionMode)Enum.Parse(typeof(CompletionMode), completionModeComboBox.SelectedItem.ToString());
-                _settingsService.SaveAllSettings(apiKey, mode);
+                var writingPrompt = writingPromptTextBox.Text;
+                var translationPrompt = translationPromptTextBox.Text;
+                _settingsService.SaveAllSettings(apiKey, mode, writingPrompt, translationPrompt);
             }
             MessageBox.Show("Settings saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();

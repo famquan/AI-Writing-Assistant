@@ -15,6 +15,8 @@ namespace AI_Writing_Assistant
     {
         public string ApiKey { get; set; }
         public CompletionMode CompletionMode { get; set; } = CompletionMode.Select;
+        public string WritingSystemPrompt { get; set; }
+        public string TranslationSystemPrompt { get; set; }
     }
 
     public class SettingsService
@@ -42,10 +44,26 @@ namespace AI_Writing_Assistant
             return settings?.CompletionMode ?? CompletionMode.Select;
         }
 
-        public void SaveAllSettings(string apiKey, CompletionMode mode)
+        public string GetWritingSystemPrompt()
+        {
+            return string.IsNullOrEmpty(settings?.WritingSystemPrompt)
+                ? Constants.DefaultWritingSystemPrompt
+                : settings.WritingSystemPrompt;
+        }
+
+        public string GetTranslationSystemPrompt()
+        {
+            return string.IsNullOrEmpty(settings?.TranslationSystemPrompt)
+                ? Constants.DefaultTranslationSystemPrompt
+                : settings.TranslationSystemPrompt;
+        }
+
+        public void SaveAllSettings(string apiKey, CompletionMode mode, string writingPrompt, string translationPrompt)
         {
             settings.ApiKey = apiKey;
             settings.CompletionMode = mode;
+            settings.WritingSystemPrompt = writingPrompt;
+            settings.TranslationSystemPrompt = translationPrompt;
             SaveSettings();
         }
 

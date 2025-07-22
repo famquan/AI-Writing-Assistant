@@ -8,18 +8,29 @@ Powered by AI language models.
 
 AI writing tools generate copy and improve writing based on user prompts. You might input a paragraph into an AI writing tool asking it to pinpoint instances of passive voice, for example. It will then list each instance. Or you could ask for 10 email snippet suggestions for an email campaign, giving the tool enough information to offer an insightful response.
 
-To offer good quality and human-like responses, these tools analyze large quantities of data, which dictates their impressions of what a good answer would be. Much of this data is accessed via web content, though, meaning AI writing tools donít always provide accurate and ethical responses. Always audit the content you use from these platforms to ensure that itís correct and aligns with your values.
+To offer good quality and human-like responses, these tools analyze large quantities of data, which dictates their impressions of what a good answer would be. Much of this data is accessed via web content, though, meaning AI writing tools don‚Äôt always provide accurate and ethical responses. Always audit the content you use from these platforms to ensure that it‚Äôs correct and aligns with your values.
 
 ## How can AI improve your writing?
 
-Chances are youíre familiar with your word processorís spellchecker. When you skip or misspell a word, this tool automatically fixes the error, or gives you the option to do so. AI writing tools work the same way, just with much more power behind them. AI tools can improve your copywriting by offering suggestions on the following:
+Chances are you‚Äôre familiar with your word processor‚Äôs spellchecker. When you skip or misspell a word, this tool automatically fixes the error, or gives you the option to do so. AI writing tools work the same way, just with much more power behind them. AI tools can improve your copywriting by offering suggestions on the following:
 
--   **Grammar** ó they can correct grammar mistakes you may not recognize or catch. While it may be common to hear a sentence like, ìThere were less people at the meeting this week,î that grammar is off, and an AI tool would likely catch it, correcting the sentence to read ìfewer people.î
+-   **Grammar** ‚Äî they can correct grammar mistakes you may not recognize or catch. While it may be common to hear a sentence like, ‚ÄúThere were less people at the meeting this week,‚Äù that grammar is off, and an AI tool would likely catch it, correcting the sentence to read ‚Äúfewer people.‚Äù
     
--   **Clarity**  ó AI tools can recommend more precise sentences that cut out unnecessary descriptors and wordy syntax. An AI writing assistant might suggest ìthe companyís visionî instead of the clunkier and repetitive ìthe vision and dreams of the company.î
+-   **Clarity**  ‚Äî AI tools can recommend more precise sentences that cut out unnecessary descriptors and wordy syntax. An AI writing assistant might suggest ‚Äúthe company‚Äôs vision‚Äù instead of the clunkier and repetitive ‚Äúthe vision and dreams of the company.‚Äù
     
--   **Tone**  ó these tools can understand a piece's style and recommend staying in a formal or friendly voice. An AI writing helper might flag academic language in an informal email and recommend a change, like switching out ìfacileî for ìeasyî or ìsimple.î
+-   **Tone**  ‚Äî these tools can understand a piece's style and recommend staying in a formal or friendly voice. An AI writing helper might flag academic language in an informal email and recommend a change, like switching out ‚Äúfacile‚Äù for ‚Äúeasy‚Äù or ‚Äúsimple.‚Äù
     
--   **Structure**  ó a well-written document that doesnít follow a logical structure can lose the reader. AI tools can suggest an outline that supports your ideas and encourages a logical flow of ideas.
+-   **Structure**  ‚Äî a well-written document that doesn‚Äôt follow a logical structure can lose the reader. AI tools can suggest an outline that supports your ideas and encourages a logical flow of ideas.
     
--   **What to write next** ó  an AI writing assistant can finish your sentences, write a first draft of an email, and summarize meeting notes or audio clips. If a teammate talks freely for 2ñ3 minutes about an upcoming development project, an AI tool can write down a salient point like, ìThe team will begin development on a wellness app next week.î
+-   **What to write next** ‚Äî  an AI writing assistant can finish your sentences, write a first draft of an email, and summarize meeting notes or audio clips. If a teammate talks freely for 2‚Äì3 minutes about an upcoming development project, an AI tool can write down a salient point like, ‚ÄúThe team will begin development on a wellness app next week.‚Äù
+
+## Configuration
+
+This application allows you to customize the system prompts used for generating writing suggestions and translations.
+
+To access the settings, right-click the application's tray icon and select "Settings." In the settings window, you can modify the following prompts:
+
+-   **Writing System Prompt**: The prompt used to guide the AI in improving your writing.
+-   **Translation System Prompt**: The prompt used for translating text to Vietnamese.
+
+The default prompts are designed for general use, but you can tailor them to better suit your specific needs.
