@@ -11,9 +11,16 @@ namespace AI_Writing_Assistant.Services
         Auto
     }
 
+    public enum AiProvider
+    {
+        OpenAI,
+        Gemini
+    }
+
     public class AppSettings
     {
         public string ApiKey { get; set; }
+        public AiProvider AiProvider { get; set; } = AiProvider.OpenAI;
         public CompletionMode CompletionMode { get; set; } = CompletionMode.Select;
         public string WritingSystemPrompt { get; set; }
         public string TranslationSystemPrompt { get; set; }
@@ -39,6 +46,11 @@ namespace AI_Writing_Assistant.Services
             return settings?.ApiKey;
         }
 
+        public AiProvider GetAiProvider()
+        {
+            return settings?.AiProvider ?? AiProvider.OpenAI;
+        }
+
         public CompletionMode GetCompletionMode()
         {
             return settings?.CompletionMode ?? CompletionMode.Select;
@@ -58,9 +70,10 @@ namespace AI_Writing_Assistant.Services
                 : settings.TranslationSystemPrompt;
         }
 
-        public void SaveAllSettings(string apiKey, CompletionMode mode, string writingPrompt, string translationPrompt)
+        public void SaveAllSettings(string apiKey, AiProvider provider, CompletionMode mode, string writingPrompt, string translationPrompt)
         {
             settings.ApiKey = apiKey;
+            settings.AiProvider = provider;
             settings.CompletionMode = mode;
             settings.WritingSystemPrompt = writingPrompt;
             settings.TranslationSystemPrompt = translationPrompt;

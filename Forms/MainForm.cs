@@ -30,11 +30,11 @@ namespace AI_Writing_Assistant
         private NotifyIcon? trayIcon;
         private GlobalKeyboardHook? keyboardHook;
         private SuggestionWindow? suggestionWindow;
-        private readonly AIService _aiService;
+        private readonly IAiService _aiService;
         private readonly SettingsService _settingsService;
         private bool isProcessing = false;
 
-        public MainForm(AIService aiService, SettingsService settingsService)
+        public MainForm(IAiService aiService, SettingsService settingsService)
         {
             InitializeComponent();
             _aiService = aiService;

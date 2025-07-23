@@ -10,6 +10,7 @@ namespace AI_Writing_Assistant.Forms
         private TextBox apiKeyTextBox;
         private Button saveButton;
         private ComboBox completionModeComboBox;
+        private ComboBox aiProviderComboBox;
         private TextBox writingPromptTextBox;
         private TextBox translationPromptTextBox;
         private readonly SettingsService _settingsService;
@@ -44,16 +45,31 @@ namespace AI_Writing_Assistant.Forms
                 PasswordChar = '*'
             };
 
+            var aiProviderLabel = new Label
+            {
+                Text = "AI Provider:",
+                Location = new Point(20, 90),
+                AutoSize = true
+            };
+
+            aiProviderComboBox = new ComboBox
+            {
+                Location = new Point(20, 110),
+                Size = new Size(350, 20),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            aiProviderComboBox.Items.AddRange(Enum.GetNames(typeof(AiProvider)));
+
             var writingPromptLabel = new Label
             {
                 Text = "Writing System Prompt:",
-                Location = new Point(20, 150),
+                Location = new Point(20, 210),
                 AutoSize = true
             };
 
             writingPromptTextBox = new TextBox
             {
-                Location = new Point(20, 170),
+                Location = new Point(20, 230),
                 Size = new Size(350, 100),
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical
@@ -62,13 +78,13 @@ namespace AI_Writing_Assistant.Forms
             var translationPromptLabel = new Label
             {
                 Text = "Translation System Prompt:",
-                Location = new Point(20, 290),
+                Location = new Point(20, 350),
                 AutoSize = true
             };
 
             translationPromptTextBox = new TextBox
             {
-                Location = new Point(20, 310),
+                Location = new Point(20, 370),
                 Size = new Size(350, 100),
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical
@@ -89,13 +105,13 @@ namespace AI_Writing_Assistant.Forms
             var completionModeLabel = new Label
             {
                 Text = "Completion Mode:",
-                Location = new Point(20, 90),
+                Location = new Point(20, 150),
                 AutoSize = true
             };
 
             completionModeComboBox = new ComboBox
             {
-                Location = new Point(20, 110),
+                Location = new Point(20, 170),
                 Size = new Size(350, 20),
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
@@ -103,6 +119,8 @@ namespace AI_Writing_Assistant.Forms
 
             Controls.Add(apiKeyLabel);
             Controls.Add(apiKeyTextBox);
+            Controls.Add(aiProviderLabel);
+            Controls.Add(aiProviderComboBox);
             Controls.Add(completionModeLabel);
             Controls.Add(completionModeComboBox);
             Controls.Add(writingPromptLabel);
@@ -115,6 +133,7 @@ namespace AI_Writing_Assistant.Forms
         private void LoadSettings()
         {
             apiKeyTextBox.Text = _settingsService.GetApiKey();
+            aiProviderComboBox.SelectedItem = _settingsService.GetAiProvider().ToString();
             completionModeComboBox.SelectedItem = _settingsService.GetCompletionMode().ToString();
             writingPromptTextBox.Text = _settingsService.GetWritingSystemPrompt();
             translationPromptTextBox.Text = _settingsService.GetTranslationSystemPrompt();
@@ -122,13 +141,14 @@ namespace AI_Writing_Assistant.Forms
 
         private void SaveSettings(object sender, EventArgs e)
         {
-            if (completionModeComboBox.SelectedItem != null)
+            if (completionModeComboBox.SelectedItem != null && aiProviderComboBox.SelectedItem != null)
             {
                 var apiKey = apiKeyTextBox.Text;
+                var provider = (AiProvider)Enum.Parse(typeof(AiProvider), aiProviderComboBox.SelectedItem.ToString());
                 var mode = (CompletionMode)Enum.Parse(typeof(CompletionMode), completionModeComboBox.SelectedItem.ToString());
                 var writingPrompt = writingPromptTextBox.Text;
                 var translationPrompt = translationPromptTextBox.Text;
-                _settingsService.SaveAllSettings(apiKey, mode, writingPrompt, translationPrompt);
+                _settingsService.SaveAllSettings(apiKey, provider, mode, writingPrompt, translationPrompt);
             }
             MessageBox.Show("Settings saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
