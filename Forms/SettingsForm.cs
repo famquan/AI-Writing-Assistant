@@ -1,8 +1,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AI_Writing_Assistant.Services;
 
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Forms
 {
     public class SettingsForm : Form
     {
@@ -22,12 +23,12 @@ namespace AI_Writing_Assistant
 
         private void InitializeComponents()
         {
-            this.Text = "Settings";
-            this.Size = new Size(400, 550);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            Text = "Settings";
+            Size = new Size(400, 550);
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
 
             var apiKeyLabel = new Label
             {
@@ -100,15 +101,15 @@ namespace AI_Writing_Assistant
             };
             completionModeComboBox.Items.AddRange(Enum.GetNames(typeof(CompletionMode)));
 
-            this.Controls.Add(apiKeyLabel);
-            this.Controls.Add(apiKeyTextBox);
-            this.Controls.Add(completionModeLabel);
-            this.Controls.Add(completionModeComboBox);
-            this.Controls.Add(writingPromptLabel);
-            this.Controls.Add(writingPromptTextBox);
-            this.Controls.Add(translationPromptLabel);
-            this.Controls.Add(translationPromptTextBox);
-            this.Controls.Add(saveButton);
+            Controls.Add(apiKeyLabel);
+            Controls.Add(apiKeyTextBox);
+            Controls.Add(completionModeLabel);
+            Controls.Add(completionModeComboBox);
+            Controls.Add(writingPromptLabel);
+            Controls.Add(writingPromptTextBox);
+            Controls.Add(translationPromptLabel);
+            Controls.Add(translationPromptTextBox);
+            Controls.Add(saveButton);
         }
 
         private void LoadSettings()
@@ -130,7 +131,7 @@ namespace AI_Writing_Assistant
                 _settingsService.SaveAllSettings(apiKey, mode, writingPrompt, translationPrompt);
             }
             MessageBox.Show("Settings saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Close();
+            Close();
         }
     }
 }

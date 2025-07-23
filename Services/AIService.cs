@@ -1,8 +1,9 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AI_Writing_Assistant.Forms;
 
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Services
 {
     public class AIService
     {

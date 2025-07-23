@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Forms
 {
     public class SuggestionWindow : Form
     {
@@ -13,7 +13,7 @@ namespace AI_Writing_Assistant
 
         public SuggestionWindow(string original, List<WritingSuggestion> suggestions)
         {
-            this.originalText = original;
+            originalText = original;
             this.suggestions = new List<WritingSuggestion> { new WritingSuggestion { Type = "Original", ImprovedText = original, Reason = "Your original text." } };
             this.suggestions.AddRange(suggestions);
             InitializeComponents();
@@ -22,8 +22,8 @@ namespace AI_Writing_Assistant
 
         public SuggestionWindow(string translatedText)
         {
-            this.originalText = translatedText;
-            this.suggestions = new List<WritingSuggestion> { new WritingSuggestion { Type = "Translation", ImprovedText = translatedText, Reason = "Translated text." } };
+            originalText = translatedText;
+            suggestions = new List<WritingSuggestion> { new WritingSuggestion { Type = "Translation", ImprovedText = translatedText, Reason = "Translated text." } };
             InitializeComponents();
             LoadSuggestions();
             suggestionsListBox.KeyDown += SuggestionsListBox_KeyDown;
@@ -32,12 +32,12 @@ namespace AI_Writing_Assistant
         private void InitializeComponents()
         {
             // Window setup
-            this.Text = "AI Assistant";
-            this.TopMost = true;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            Text = "AI Assistant";
+            TopMost = true;
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
 
             // Main panel
             mainPanel = new Panel
@@ -51,7 +51,7 @@ namespace AI_Writing_Assistant
                 DrawMode = DrawMode.OwnerDrawVariable,
                 Dock = DockStyle.Fill,
                 BorderStyle = BorderStyle.None,
-                BackColor = Color.White ,
+                BackColor = Color.White,
             };
 
             suggestionsListBox.MeasureItem += SuggestionsListBox_MeasureItem;
@@ -63,7 +63,7 @@ namespace AI_Writing_Assistant
             // Add controls to main panel
             mainPanel.Controls.Add(suggestionsListBox);
 
-            this.Controls.Add(mainPanel);
+            Controls.Add(mainPanel);
         }
 
         private void SuggestionsListBox_DoubleClick(object? sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace AI_Writing_Assistant
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                this.Close();
+                Close();
             }
         }
 
@@ -154,7 +154,7 @@ namespace AI_Writing_Assistant
         private void OnSuggestionButtonClick(string selectedText)
         {
             SuggestionSelected?.Invoke(this, new SuggestionSelectedEventArgs(selectedText));
-            this.Close();
+            Close();
         }
 
         private void AdjustWindowSize()
@@ -173,7 +173,7 @@ namespace AI_Writing_Assistant
 
             int newHeight = totalHeight + mainPanel.Padding.Top + mainPanel.Padding.Bottom + 50;
             int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
-            this.Size = new Size(600, Math.Min(newHeight, screenHeight));
+            Size = new Size(600, Math.Min(newHeight, screenHeight));
         }
     }
 

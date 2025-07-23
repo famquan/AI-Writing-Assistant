@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Services
 {
     public enum CompletionMode
     {

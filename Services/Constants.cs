@@ -1,4 +1,4 @@
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Services
 {
     public static class Constants
     {

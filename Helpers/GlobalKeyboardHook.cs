@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace AI_Writing_Assistant
+namespace AI_Writing_Assistant.Helpers
 {
     public class GlobalKeyboardHook : IDisposable
     {
@@ -10,10 +10,10 @@ namespace AI_Writing_Assistant
         private const int WM_KEYUP = 0x0101;
 
         private HookProc _proc = HookCallback;
-        private IntPtr _hookID = IntPtr.Zero;
+        private nint _hookID = nint.Zero;
         private static GlobalKeyboardHook _instance;
 
-        public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        public delegate nint HookProc(int nCode, nint wParam, nint lParam);
 
         public event EventHandler<GlobalKeyboardHookEventArgs> KeyDown;
         public event EventHandler<GlobalKeyboardHookEventArgs> KeyUp;
@@ -24,7 +24,7 @@ namespace AI_Writing_Assistant
             _hookID = SetHook(_proc);
         }
 
-        private static IntPtr SetHook(HookProc proc)
+        private static nint SetHook(HookProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
@@ -33,7 +33,7 @@ namespace AI_Writing_Assistant
             }
         }
 
-        private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        private static nint HookCallback(int nCode, nint wParam, nint lParam)
         {
             if (nCode >= 0)
             {
@@ -51,17 +51,17 @@ namespace AI_Writing_Assistant
                 var keyData = key | modifiers;
                 var args = new GlobalKeyboardHookEventArgs { KeyData = keyData };
 
-                if (wParam == (IntPtr)WM_KEYDOWN)
+                if (wParam == WM_KEYDOWN)
                 {
                     _instance?.KeyDown?.Invoke(_instance, args);
                 }
-                else if (wParam == (IntPtr)WM_KEYUP)
+                else if (wParam == WM_KEYUP)
                 {
                     _instance?.KeyUp?.Invoke(_instance, args);
                 }
 
                 if (args.Handled)
-                    return (IntPtr)1;
+                    return 1;
             }
 
             return CallNextHookEx(_instance._hookID, nCode, wParam, lParam);
@@ -73,17 +73,17 @@ namespace AI_Writing_Assistant
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+        private static extern nint SetWindowsHookEx(int idHook, HookProc lpfn, nint hMod, uint dwThreadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        private static extern bool UnhookWindowsHookEx(nint hhk);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+        private static extern nint CallNextHookEx(nint hhk, int nCode, nint wParam, nint lParam);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
+        private static extern nint GetModuleHandle(string lpModuleName);
 
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(Keys vKey);

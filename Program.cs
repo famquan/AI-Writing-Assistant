@@ -1,4 +1,5 @@
 using AI_Writing_Assistant;
+using AI_Writing_Assistant.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class Program

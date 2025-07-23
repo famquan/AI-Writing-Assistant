@@ -10,6 +10,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AI_Writing_Assistant.Forms;
+using AI_Writing_Assistant.Helpers;
+using AI_Writing_Assistant.Services;
 
 namespace AI_Writing_Assistant
 {
