@@ -1,8 +1,9 @@
-## AI Writing Assistant v1.0
+## AI Writing Assistant v1.2
 
-Press CTRL+SHIFT+Z to improve selected text.
+-   Press `CTRL+SHIFT+Z` to improve selected text.
+-   Press `CTRL+SHIFT+V` to translate selected text to Vietnamese.
 
-Powered by AI language models.
+Powered by **OpenAI** and **Gemini** language models.
 
 ## What are AI writing tools?
 
@@ -26,11 +27,13 @@ Chances are you’re familiar with your word processor’s spellchecker. When yo
 
 ## Configuration
 
-This application allows you to customize the system prompts used for generating writing suggestions and translations.
+This application allows you to customize the AI service, API keys, and system prompts.
 
-To access the settings, right-click the application's tray icon and select "Settings." In the settings window, you can modify the following prompts:
+To access the settings, right-click the application's tray icon and select "Settings." In the settings window, you can configure the following:
 
--   **Writing System Prompt**: The prompt used to guide the AI in improving your writing.
--   **Translation System Prompt**: The prompt used for translating text to Vietnamese.
+-   **AI Service**: Choose between `OpenAI` and `Gemini` as the provider for AI-powered suggestions.
+-   **API Key**: Enter your API key for the selected service.
+-   **Writing System Prompt**: Customize the prompt used to guide the AI in improving your writing.
+-   **Translation System Prompt**: Modify the prompt used for translating text to Vietnamese.
 
 The default prompts are designed for general use, but you can tailor them to better suit your specific needs.

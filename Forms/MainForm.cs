@@ -239,7 +239,7 @@ namespace AI_Writing_Assistant
 
         private void ShowAbout(object? sender, EventArgs e)
         {
-            MessageBox.Show("AI Writing Assistant v1.1\n\nPress CTRL+SHIFT+Z to improve selected text.\n\nPress CTRL+SHIFT+V to translate selected text.\n\nPowered by AI language models.",
+            MessageBox.Show("AI Writing Assistant v1.2\n\nPress CTRL+SHIFT+Z to improve selected text.\n\nPress CTRL+SHIFT+V to translate selected text.\n\nPowered by AI language models.",
                           "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
