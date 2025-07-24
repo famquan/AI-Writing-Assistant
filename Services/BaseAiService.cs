@@ -26,7 +26,7 @@ namespace AI_Writing_Assistant.Services
             try
             {
                 var response = await CallWritingSuggestionApiAsync(text);
-                return ParseAIResponse(response);
+                return ParseSuggestionResponse(response);
             }
             catch (System.Exception ex)
             {
@@ -72,56 +72,7 @@ namespace AI_Writing_Assistant.Services
             return suggestions;
         }
 
-        private List<WritingSuggestion> ParseAIResponse(string response)
-        {
-            try
-            {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
-                var aiResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(response, options);
-
-                if (aiResponse?.Choices?.Count > 0)
-                {
-                    var messageContent = aiResponse.Choices[0].Message?.Content;
-                    if (!string.IsNullOrEmpty(messageContent))
-                    {
-                        var suggestionsResponse = JsonSerializer.Deserialize<SuggestionsResponse>(messageContent, options);
-                        return suggestionsResponse?.Suggestions ?? new List<WritingSuggestion>();
-                    }
-                }
-            }
-            catch (JsonException ex)
-            {
-                System.Console.WriteLine($"Error parsing AI response: {ex.Message}");
-            }
-            return new List<WritingSuggestion>();
-        }
-
-        private string ParseTranslationResponse(string response)
-        {
-            try
-            {
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var aiResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(response, options);
-
-                if (aiResponse?.Choices?.Count > 0)
-                {
-                    var messageContent = aiResponse.Choices[0].Message?.Content;
-                    if (!string.IsNullOrEmpty(messageContent))
-                    {
-                        var translationResponse = JsonSerializer.Deserialize<TranslationResponse>(messageContent, options);
-                        return translationResponse?.Translation ?? "No translation found.";
-                    }
-                }
-            }
-            catch (JsonException ex)
-            {
-                System.Console.WriteLine($"Error parsing translation response: {ex.Message}");
-            }
-            return "Error parsing translation.";
-        }
+        protected abstract List<WritingSuggestion> ParseSuggestionResponse(string response);
+        protected abstract string ParseTranslationResponse(string response);
     }
 }

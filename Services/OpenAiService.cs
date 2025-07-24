@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -19,7 +20,7 @@ namespace AI_Writing_Assistant.Services
 
         protected override async Task<string> CallWritingSuggestionApiAsync(string text)
         {
-            var apiKey = _settingsService.GetApiKey();
+            
             var requestBody = new
             {
                 model = "gpt-4.1-mini",
@@ -39,6 +40,12 @@ namespace AI_Writing_Assistant.Services
                 temperature = 0.5
             };
 
+            return await CallApiAsync(requestBody);
+        }
+
+        private async Task<string> CallApiAsync(Object requestBody)
+        {
+            var apiKey = _settingsService.GetApiKey();
             var json = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -52,7 +59,6 @@ namespace AI_Writing_Assistant.Services
 
         protected override async Task<string> CallTranslationApiAsync(string text)
         {
-            var apiKey = _settingsService.GetApiKey();
             var requestBody = new
             {
                 model = "gpt-4.1-mini",
@@ -72,15 +78,59 @@ namespace AI_Writing_Assistant.Services
                 temperature = 0.7
             };
 
-            var json = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            return await CallApiAsync(requestBody);
+        }
 
-            var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+        protected override List<WritingSuggestion> ParseSuggestionResponse(string response)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
 
-            var response = await httpClient.PostAsync(apiUrl, content);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+                var aiResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(response, options);
+
+                if (aiResponse?.Choices?.Count > 0)
+                {
+                    var messageContent = aiResponse.Choices[0].Message?.Content;
+                    if (!string.IsNullOrEmpty(messageContent))
+                    {
+                        var suggestionsResponse = JsonSerializer.Deserialize<SuggestionsResponse>(messageContent, options);
+                        return suggestionsResponse?.Suggestions ?? new List<WritingSuggestion>();
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                System.Console.WriteLine($"Error parsing AI response: {ex.Message}");
+            }
+            return new List<WritingSuggestion>();
+        }
+
+        protected override string ParseTranslationResponse(string response)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var aiResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(response, options);
+
+                if (aiResponse?.Choices?.Count > 0)
+                {
+                    var messageContent = aiResponse.Choices[0].Message?.Content;
+                    if (!string.IsNullOrEmpty(messageContent))
+                    {
+                        var translationResponse = JsonSerializer.Deserialize<TranslationResponse>(messageContent, options);
+                        return translationResponse?.Translation ?? "No translation found.";
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                System.Console.WriteLine($"Error parsing translation response: {ex.Message}");
+            }
+            return "Error parsing translation.";
         }
     }
 
